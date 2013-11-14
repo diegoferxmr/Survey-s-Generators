@@ -1,0 +1,19 @@
+<QuestionModule>
+    <ModuleData>
+        <Date/>
+        <Name/>
+        <Intention/>
+        <Description/>
+    </ModuleData>
+    <ModuleLogic>
+        <Question>
+            <Title/>
+            <Type/>
+            <Name/>
+            <Answers>
+                <ans/>
+            </Answers>
+            <solution/>
+        </Question>
+    </ModuleLogic>
+</QuestionModule>

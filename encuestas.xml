@@ -1,0 +1,275 @@
+<?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <title/>
+        <xf:model>
+            <xf:instance>
+                <QuestionModule xmlns="">
+                    <ModuleData>
+                        <Date/>
+                        <Name/>
+                        <Intention/>
+                        <Description/>
+                    </ModuleData>
+                    <ModuleLogic>
+                        <Question>
+                            <Title/>
+                            <Type>default</Type>
+                            <Name/>
+                            <Answers>
+                                <ans/>
+                            </Answers>
+                            <solution/>
+                        </Question>
+                    </ModuleLogic>
+                </QuestionModule>
+            </xf:instance>
+            <!-- <xf:submission id="save" resource="form.xml" method="PUT" replace="none"/> -->
+            <xf:bind nodeset="/*/ModuleLogic" relevant="/*/ModuleData/Name != '' and /*/ModuleData/Intention != '' and /*/ModuleData/Description != '' and /*/ModuleData/Date != ''"/>
+            <xf:bind nodeset="/*/ModuleData/Date" type="xs:date"/>
+            <xf:submission id="save" resource="save.xq" method="POST" replace="instance" if="/*/ModuleLogic/Question/Title = '' and  /*/ModuleLogic/Question/Name = ''">
+                <xf:load ev:event="xforms-submit-done" resource="listado.xq"/>
+            </xf:submission>
+            <xf:instance id="encuestaNueva" src="encuestaNueva.xml"/>
+            <xf:instance id="preguntaNueva" src="newQuestion.xml"/>
+            <xf:submission id="load" replace="instance" instance="encuestaNueva" method="GET">
+                <xf:resource value="resourcename()"/>
+            </xf:submission>
+        </xf:model>
+        <style>
+      fieldset { border:1px solid green }
+      legend {
+      padding: 0.2em 0.5em;
+      border:1px solid green;
+      color:green;
+      font-size:90%;
+      text-align:right;
+      }
+      h1 { 
+          text-align: center;
+		  color: white;
+		  text-transform: uppercase;
+		  padding: 1px;
+		  font-family: 'Raleway', cursive;
+		  font-weight: 100;
+		  position: relative;
+		  background: -webkit-linear-gradient(left, black, #eee, black);
+		  background: -moz-linear-gradient(left, black, #eee, black);
+		  background: -ms-linear-gradient(left, black, #eee, black);
+		  background: -o-linear-gradient(left, black, #eee, black);
+		}
+		h1:before {
+		  content: "";
+		  position: absolute;
+		  left: 50%;
+		  top: -50px;
+		  width: 600px;
+		  margin-left: -300px;
+		  margin-top: -220px;
+		  height: 600px;
+		  background: -webkit-radial-gradient(50% 50%, ellipse closest-side, #444, black);
+		  background: -moz-radial-gradient(50% 50%, ellipse closest-side, #444, black);
+		  background: -ms-radial-gradient(50% 50%, ellipse closest-side, #444, black);
+		  background: -o-radial-gradient(50% 50%, ellipse closest-side, #444, black);
+		  z-index: -1;
+		}
+		h1 a {
+		  background: black;
+		  display: block;
+		  padding: 20px;
+		  text-decoration: none;
+		  letter-spacing: 30px;
+		  color: white;
+		  -webkit-animation: comein 1.5s 1 ease-in-out forwards;
+		  -moz-animation: comein 1.5s 1 ease-in-out forwards;
+		}
+		
+		@-webkit-keyframes comein {
+		   0% { letter-spacing: 100px; color: rgba(255,255,255,0); }
+		   70% { letter-spacing: 20px; }
+		   100% { letter-spacing: 30px; color: rgba(255,255,255,1) }
+		}
+		@-moz-keyframes comein {
+		   0% { letter-spacing: 100px; color: rgba(255,255,255,0); }
+		   70% { letter-spacing: 20px; }
+		   100% { letter-spacing: 30px; color: rgba(255,255,255,1) }
+		}
+     
+      
+</style>
+        <script type="text/javascript" language="javascript">
+function geturlparam( name ){
+name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]"); 
+var regexS = "[\\?&amp;]"+name+"=([^&amp;#]*)"; 
+var regex = new RegExp( regexS ); 
+var results = regex.exec( window.location.href ); 
+if( results == null ) return ""; 
+else return results[1];
+}
+
+function resourcename()
+{
+  var s = geturlparam("id");
+
+  if ( s == "" ) {
+
+    return "encuestaNueva.xml";
+  } else {
+    return "hojas/" + s;
+  }
+}
+</script>
+    </head>
+    <body style="background:black;color:white">
+        <div id="cssmenu">
+            <ul style="color:white">
+                <li class="active">
+                    <a href="encuestas.xml">
+                        <span style="color:white">Diseñador</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listado.xq">
+                        <span style="color:white">Encuestas</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <center>
+            <br/>
+            <h1>
+                <a href="#">Survey's Designer</a>
+            </h1>
+            <fieldset>
+                <xf:group ref="ModuleData">
+                    <xf:label>
+                        <b>Survey's Dates</b>
+                    </xf:label>
+                    <xf:input ref="Date">
+                        <xf:label>Date</xf:label>
+                    </xf:input>
+                    <xf:input ref="Name">
+                        <xf:label>Name</xf:label>
+                    </xf:input>
+                    <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Here you must enter a name for the survey"/>
+                    <xf:input ref="Intention">
+                        <xf:label>Intention</xf:label>
+                    </xf:input>
+                    <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Here you must enter the purpose of the survey"/>
+                    <xf:input ref="Description">
+                        <xf:label>Description</xf:label>
+                    </xf:input>
+                    <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Here you must briefly describe the theme of the survey"/>
+                </xf:group>
+            </fieldset>
+        <!--****************************************BOTON****************************-->
+        <!--<xf:trigger>
+            <xf:label>Continuar</xf:label>
+            <xf:toggle case="faltaLlenarDatos" ev:event="DOMActivate"/>
+        </xf:trigger>-->   
+        <!--****************************************LETRERO DEBE LLENAR LOS CAMPOS****************************-->
+        <!--<xf:switch>
+            <xf:case id="default" selected="true()">
+                <xf:label/>
+            </xf:case>
+            <xf:case id="faltaLlenarDatos" selected="true()">
+                <xf:label>*Debe llenar todos los campos para continuar</xf:label>
+            </xf:case>
+        </xf:switch>-->
+        <!--***************************GRUPO DEL LABEL*****************************************************-->
+            <fieldset>
+                <div style="color:red">
+                    <xf:group ref=".[/*/ModuleData/Name = '' or /*/ModuleData/Date = '' or /*/ModuleData/Intention = '' or /*/ModuleData/Description = '']">
+                        <xf:label>*You must complete the previous fields to continue.</xf:label>
+                    </xf:group>
+                </div>
+        
+        <!--*********************************************************************************************-->
+                <xf:group ref="ModuleLogic">
+                    <xf:label>
+                        <b>ModuleLogic</b>
+                    </xf:label>
+                    <xf:repeat ref="Question">
+                        <xf:label>
+                            <u>
+                                <b>Question:</b>
+                            </u>
+                        </xf:label>
+                        <xf:input ref="Title">
+                            <xf:label>Title</xf:label>
+                        </xf:input>
+                        <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Here you must enter a title for the question"/>
+                        <xf:select1 ref="Type" appearance="minimal">
+                            <xf:label>Type</xf:label>
+                            <xf:item case="default">
+                                <xf:label>Unique Response</xf:label>
+                                <xf:value>default</xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>Multiple Response</xf:label>
+                                <xf:value>MR</xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>Open Response</xf:label>
+                                <xf:value>OR</xf:value>
+                            </xf:item>
+                        </xf:select1>
+                        <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Only answer: Select this option if the question consists of a single response. Multiple response: Select this option if the question has several answers. Open response: Select this option if the response consists of a text or several paragraphs."/>
+                        <xf:input ref="Name">
+                            <xf:label>Name</xf:label>
+                        </xf:input>
+                        <img src="http://www.h2e.es/_include/images/icons/interrogacion.png" title="Here you must enter a name for the question"/>
+                        <div>
+                            <xf:group ref="Answers">
+                <!--<xf:trigger>
+                    <xf:label>Create</xf:label>
+                    <xf:toggle case="default" ev:event="DOMActivate" if=".[/*/ModuleLogic/Question/Type = 'default']"/>
+                    <xf:toggle case="multipleResponse" ev:event="DOMActivate" if=".[/*/ModuleLogic/Question/Type = 'MR']"/>
+                    <xf:toggle case="openResponse" ev:event="DOMActivate" if=".[/*/ModuleLogic/Question/Type = 'OR']"/>
+                </xf:trigger> -->
+                                <xf:repeat nodeset="ans">
+                                    <xf:input ref=".">ans</xf:input>
+                                    <xf:trigger>
+                                        <xf:label>Delete</xf:label>
+                                        <xf:delete ev:event="DOMActivate" nodeset="." if="count(../ans) &gt; 1"/>
+                                    </xf:trigger>
+                                </xf:repeat>
+                                <xf:trigger>
+                                    <xf:label>Add New Response</xf:label>
+                                    <xf:insert ev:event="DOMActivate" nodeset="ans"/>
+                                </xf:trigger>
+                            </xf:group>
+                        </div>
+                        <xf:trigger>
+                            <xf:label>Add New Question</xf:label>
+                            <xf:action ev:event="DOMActivate">
+                                <xf:insert ev:event="DOMActivate" nodeset="." if="/*/ModuleLogic/Question/Title != '' and /*/ModuleLogic/Question/Name != '' " origin="instance('preguntaNueva')"/>
+                                <xf:message level="modal" ev:event="DOMActivate" if="/*/ModuleLogic/Question/Title = ''">
+                            The field "Title" is required
+                        </xf:message>
+                                <xf:message level="modal" ev:event="DOMActivate" if="/*/ModuleLogic/Question/Name = ''">
+                            The field "Name" is required
+                        </xf:message>
+                            </xf:action>
+                        </xf:trigger>
+                    </xf:repeat>
+                </xf:group>
+            </fieldset>
+            <fieldset>
+                <xf:submit submission="save" appearance="normal" if="/*/ModuleLogic/Question/Title = '' and  /*/ModuleLogic/Question/Name = ''">
+                    <xf:label>Save</xf:label>
+                    <xf:action ev:event="DOMActivate">
+                        <xf:message level="modal" if="/*/ModuleLogic/Question/Title = '' or  /*/ModuleLogic/Question/Name = ''">
+                            The field "Title" and "Name" are required.
+                        </xf:message>
+                    </xf:action>
+                </xf:submit>
+                <xf:trigger>
+                    <xf:label>Show Surveys</xf:label>
+                    <xf:load ev:event="DOMActivate" resource="listado.xq"/>
+                </xf:trigger>
+            </fieldset>
+        </center>
+    </body>
+</html>

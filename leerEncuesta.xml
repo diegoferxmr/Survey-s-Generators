@@ -1,0 +1,187 @@
+<?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <title/>
+        <xf:model>
+            <xf:instance id="encuesta" src="encuestaNueva.xml"/>
+            <xf:submission id="load" replace="instance" instance="encuesta" method="GET">
+                <xf:resource value="resourcename()"/>
+            </xf:submission>
+            <xf:send ev:event="xforms-ready" submission="load"/>
+            <xf:submission id="save" resource="form.xml" method="PUT" replace="none"/>
+            <xf:bind nodeset="/*/ModuleData" readonly="true()"/>
+            <xf:bind nodeset="/*/ModuleLogic/Question/Title" readonly="true()"/>
+            <xf:bind nodeset="/*/ModuleLogic/Question/Type" readonly="true()"/>
+            <xf:bind nodeset="/*/ModuleLogic/Question/Name" readonly="true()"/>
+        </xf:model>eData
+        <style>
+      fieldset { border:1px solid green }
+      legend {
+      padding: 0.2em 0.5em;
+      border:1px solid green;
+      color:green;
+      font-size:90%;
+      text-align:right;
+      }
+      h1 { text-shadow: 5px 5px 5px #FF0000;}
+      
+</style>
+        <script type="text/javascript" language="javascript">
+function geturlparam( name ){
+name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]"); 
+var regexS = "[\\?&amp;]"+name+"=([^&amp;#]*)"; 
+var regex = new RegExp( regexS ); 
+var results = regex.exec( window.location.href ); 
+if( results == null ) return ""; 
+else return window.location.href.substring( results.index-1 );
+}
+
+function startDownload() 
+{ 
+
+    var primera = window.location.href.substring(0,window.location.href.indexOf("leerEncuesta"));
+    var segunda = window.location.href.substring(window.location.href.lastIndexOf("id=") + 3 );
+    url = primera + "encuestas/" + segunda;
+    window.open(url,'Download"');
+}
+
+function resourcename()
+{
+  //var s = geturlparam("id");
+  var s = window.location.href.substring(window.location.href.lastIndexOf("id=") + 3 );
+  startDownload() 
+  //alert (s);
+  if ( s == "" ) {
+
+    return "encuestaNueva.xml";
+
+  } else {
+
+    return "encuestas/" + s;
+
+  }
+
+}
+
+
+
+</script>
+    </head>
+    <body style="background:#F3E2A9;">
+        <div id="cssmenu">
+            <ul>
+                <li class="active">
+                    <a href="encuestas.xml">
+                        <span>Diseñador</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listado.xq">
+                        <span>Encuestas</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <center>
+            <h1>Survey's Shower</h1>
+            <xf:group ref="ModuleData">
+                <div>
+                    <fieldset>
+                        <legend>Survey Dates</legend>
+                        <xf:input ref="Date">
+                            <xf:label>Date Start</xf:label>
+                        </xf:input>
+                        <xf:input ref="Name">
+                            <xf:label>Name</xf:label>
+                        </xf:input>
+                        <xf:input ref="Intention">
+                            <xf:label>Intention</xf:label>
+                        </xf:input>
+                        <xf:input ref="Description">
+                            <xf:label>Description</xf:label>
+                        </xf:input>
+                    </fieldset>
+                </div>
+            </xf:group>
+            <br/>
+            <br/>
+            <br/>
+            <fieldset>
+                <legend>ModuleLogic</legend>
+                <xf:group ref="ModuleLogic">
+                    <xf:repeat ref="Question">
+                        <xf:label>Question</xf:label>
+                        <xf:input ref="Title">
+                            <xf:label>Title</xf:label>
+                        </xf:input>
+                        <xf:input ref="Type">
+                            <xf:label>Type</xf:label>
+                        </xf:input>
+                        <xf:input ref="Name">
+                            <xf:label>Name</xf:label>
+                        </xf:input>
+                        <fieldset>
+                            <legend>Answers</legend>
+                            <xf:group ref="self::Question[Type='MR']">
+                                <xf:select ref="Answers" appearance="full">
+                                    <xf:label>Select the Answer(s)</xf:label>
+                                    <xf:itemset nodeset="ans">
+                                        <xf:label ref="."/>
+                                        <xf:value ref="."/>
+                                    </xf:itemset>
+                                </xf:select>
+                            </xf:group>
+                            <xf:group ref="self::Question[Type='default']">
+                                <xf:select1 ref="Answers" appearance="full">
+                                    <xf:label>Select the unique answer</xf:label>
+                                    <xf:itemset nodeset="ans">
+                                        <xf:label ref="."/>
+                                        <xf:value ref="."/>
+                                    </xf:itemset>
+                                </xf:select1>
+                            </xf:group>
+                            <xf:group ref="self::Question[Type='OR']">
+                                <xf:repeat ref="Answers/ans">
+                                    <xf:label>Write your response here...</xf:label>
+                                    <xf:textarea ref="."/>
+                                </xf:repeat>
+                            </xf:group>   
+                                
+                                    <!-- <xf:repeat nodeset="ans">
+                                        <xf:action>
+                                            <xf:toggle case="entrar"/>
+                                        </xf:action>
+                                        <xf:switch>
+                                            <xf:case id="default" selected="true()">
+                                                <xf:select1 ref="/*/ModuleLogic/Question/Answers/ans" appearance="minimal">
+                                                    <xf:item case="default">
+                                                        <xf:label ref="/*/ModuleLogic/Question/Answers/ans"/>
+                                                    </xf:item>
+                                                </xf:select1>
+                                                <xf:trigger>
+                                                    <xf:label>No entra</xf:label>
+                                                </xf:trigger>
+                                            </xf:case>
+                                            <xf:case id="entrar" selected="true()">
+                                                <xf:trigger>
+                                                    <xf:label> entra</xf:label>
+                                                </xf:trigger>
+                                            </xf:case>
+                                        </xf:switch>
+                                        <xf:label ref="."/>
+                                    </xf:repeat> -->
+                        </fieldset>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                    </xf:repeat>
+                </xf:group>
+            </fieldset>
+            <xf:submit submission="send">
+                <xf:label>Send</xf:label>
+            </xf:submit>
+        </center>
+    </body>
+</html>
